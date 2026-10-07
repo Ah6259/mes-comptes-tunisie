@@ -1,0 +1,17 @@
+{
+  "id": "/mes-comptes-tunisie/",
+  "name": "Mes comptes – revenus, dépenses, impôt et rappels",
+  "short_name": "Mes comptes",
+  "description": "Loyers, salaire, dépenses, impôt et rappels sur votre téléphone. Gratuit 3 mois. Vos chiffres restent dans votre téléphone.",
+  "lang": "fr",
+  "start_url": "./",
+  "scope": "./",
+  "display": "standalone",
+  "background_color": "#EDF2F0",
+  "theme_color": "#0E6B5C",
+  "icons": [
+    { "src": "assets/icons/icon-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "assets/icons/icon-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "assets/icons/icon-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}
