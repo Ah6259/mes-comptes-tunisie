@@ -449,9 +449,21 @@
   function payer(id) { const rc = trouve("recurrentes", id), ym = ymDe(maintenant()), dep = { id: nouvelId(), date: isoDe(maintenant()), quoi: rc.quoi, montant: rc.montant, cat: rc.cat, mode: rc.mode, recId: rc.id };
     changer(() => { D.payes[rc.id + "|" + ym] = true; D.depenses.push(dep); }, `« ${rc.quoi} » notée comme payée.`, () => { delete D.payes[rc.id + "|" + ym]; D.depenses = D.depenses.filter(d => d.id !== dep.id); }); }
 
+  // bouton Partager de l'en-tête (règle commune à tous les sites, ajouté le 09/10/2026) : menu de partage du téléphone,
+  // sinon WhatsApp ; clic compté anonymement ; on partage seulement l'adresse du site (jamais les données de l'utilisateur)
+  function partager() {
+    const url = "https://ah6259.github.io/mes-comptes-tunisie/", titre = "Mes comptes — revenus, dépenses, impôt et rappels",
+      texte = titre + " : gratuit 3 mois, les données restent dans votre téléphone.";
+    try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: "partage/", title: "Partage", event: true }); } catch (x) {}
+    const wa = () => window.open("https://wa.me/?text=" + encodeURIComponent(texte + " " + url), "_blank", "noopener");
+    if (navigator.share) navigator.share({ title: titre, text: texte, url }).catch(err => { if (!err || err.name !== "AbortError") wa(); });
+    else wa();
+  }
+
   document.addEventListener("click", e => {
     const nav = e.target.closest("nav.onglets button"); if (nav) { montrer(nav.dataset.vue, true); return; }
     if (e.target.closest("#puceEssai")) { montrer("plus", true); return; }
+    if (e.target.closest("#partager")) { partager(); return; }
     const b = e.target.closest("[data-a]"); if (!b || b.tagName === "SELECT" || b.tagName === "INPUT") return;
     const a = b.dataset.a, id = b.dataset.id;
     if (a === "aller") montrer(b.dataset.vue, true);

@@ -1,11 +1,11 @@
 /* Service worker de Mes comptes : réseau d'abord pour la page (toujours la dernière version),
    cache pour les fichiers avec ?v= ; hors connexion, la page en cache s'ouvre quand même (les chiffres sont dans le téléphone).
    On ne touche qu'à NOS caches (origine partagée avec les autres sites d'Ahmed). */
-const CACHE_VERSION = "20261007a";
+const CACHE_VERSION = "20261009b";
 const CACHE = "mes-comptes-" + CACHE_VERSION;
 const PORTEE = new URL("./", self.location).pathname;
 
-self.addEventListener("install", e => { self.skipWaiting(); e.waitUntil(caches.open(CACHE).then(c => c.addAll(["./", "assets/style.css?v=20261007a", "assets/app.js?v=20261007a", "assets/protection.js?v=20261007a", "assets/icons/icon.svg"]).catch(() => {}))); });
+self.addEventListener("install", e => { self.skipWaiting(); e.waitUntil(caches.open(CACHE).then(c => c.addAll(["./", "assets/style.css?v=20261009b", "assets/app.js?v=20261009b", "assets/protection.js?v=20261009b", "assets/icons/icon.svg"]).catch(() => {}))); });
 self.addEventListener("activate", e => {
   e.waitUntil(caches.keys().then(k => Promise.all(k.filter(n => n.startsWith("mes-comptes-") && n !== CACHE).map(n => caches.delete(n)))).then(() => self.clients.claim()));
 });

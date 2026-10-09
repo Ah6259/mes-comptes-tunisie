@@ -169,5 +169,14 @@ check("« Gratuit 3 mois » annoncé dès la page (titre, description)", /gratui
   check("tout effacer (avec confirmation dans la page)", w.MesComptes.donnees().revenus.length === 0);
 }
 
+// ---- 10. bouton Partager de l'en-tête (règle commune à tous les sites, 09/10/2026)
+{
+  const { w, d } = await page(); const ouv = [], comptes = [];
+  w.open = u => { ouv.push(u); return null; }; w.goatcounter = { count: o => comptes.push(o) };
+  check("en-tête : un seul bouton Partager", d.querySelectorAll("header .partager").length === 1);
+  clic(d, "#partager");
+  check("Partager sans menu du téléphone : WhatsApp avec l'adresse du site, clic compté", ouv.length === 1 && decodeURIComponent(ouv[0]).includes("https://ah6259.github.io/mes-comptes-tunisie/") && comptes.length === 1 && comptes[0].event === true);
+}
+
 console.log(`\n${erreurs ? erreurs + " PROBLÈME(S)" : "TOUT PASSE"} (${total} vérifications)`);
 process.exit(erreurs ? 1 : 0);
