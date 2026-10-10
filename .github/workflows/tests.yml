@@ -1,8 +1,14 @@
 # Tests de Mes comptes à chaque envoi (e-mail de GitHub en cas d'échec).
 name: tests
+# Audit des robots du 10/10/2026 : pas de tests pour un envoi qui ne change que des notes (.md) ; un nouvel envoi annule le précédent.
 on:
   push:
+    branches: [main, "entretien-tests/**"]
+    paths-ignore: ["**.md"]
   workflow_dispatch:
+concurrency:
+  group: tests-${{ github.ref }}
+  cancel-in-progress: true
 permissions:
   contents: read
 jobs:
