@@ -36,3 +36,5 @@ méthode d'Ahmed « entre locataires seulement » par défaut ; sauvegarde ; avi
 ## À faire ensuite
 Version arabe ; abonnement (Pass comme Documents / Code de la route, bouton de paiement commun) ; vérifier les dates
 fiscales et l'abattement sur les loyers sur les textes officiels ; Search Console + sitemap du site racine.
+
+- **Adresse depuis le 11/10/2026 : https://comptes.clicvia.com/** (CNAME comptes → ah6259.github.io, nuage gris, fichier `CNAME`). L'ancienne adresse redirige seule. GoatCounter garde le préfixe `/mes-comptes-tunisie` (`window.goatcounter.path` au début de assets/protection.js, chargé SANS defer avant count.js).

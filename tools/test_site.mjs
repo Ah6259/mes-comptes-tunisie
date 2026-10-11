@@ -20,7 +20,7 @@ async function page({ quand = "2026-10-22T19:00:00", stockage = {} } = {}) {
     .replace(/<script defer src="(assets\/[^"?]+)(\?[^"]*)?"><\/script>/g, (_, f) => `<script>${lire(f)}</script>`);
   const vc = new VirtualConsole(), js = [];
   vc.on("jsdomError", e => { if (!/Not implemented/.test(e.message)) js.push(e.message); });
-  const dom = new JSDOM(html, { url: "https://ah6259.github.io/mes-comptes-tunisie/", runScripts: "dangerously", pretendToBeVisual: true, virtualConsole: vc,
+  const dom = new JSDOM(html, { url: "https://comptes.clicvia.com/", runScripts: "dangerously", pretendToBeVisual: true, virtualConsole: vc,
     beforeParse(w) {
       w.MC_MAINTENANT = quand;
       for (const [k, v] of Object.entries(stockage)) w.localStorage.setItem(k, v);
@@ -42,7 +42,7 @@ check("index : CSP sans script en ligne, noai, referrer, pas de traduction auto"
 check("index : même ?v= pour style, app et protection ; sw.js le connaît", (() => { const v = [...html.matchAll(/\?v=(\w+)/g)].map(m => m[1]); const sw = lire("sw.js");
   return v.length === 3 && new Set(v).size === 1 && sw.includes(v[0]); })());
 check("installation : manifeste, icônes 192/512/maskable/180, service worker", ["manifest.webmanifest", "sw.js", "assets/icons/icon-192.png", "assets/icons/icon-512.png", "assets/icons/icon-maskable-512.png", "assets/icons/icon-180.png", "assets/og-image-v1.jpg"].every(f => existsSync(join(root, f)))
-  && JSON.parse(lire("manifest.webmanifest")).id === "/mes-comptes-tunisie/");
+  && JSON.parse(lire("manifest.webmanifest")).id === "/");
 check("vie privée : app.js n'envoie rien ailleurs que « Votre avis » (Formspree) ; aucune donnée dans le dépôt", (lire("assets/app.js").match(/fetch\(/g) || []).length === 1 && /fetch\("https:\/\/formspree\.io/.test(lire("assets/app.js")));
 check("« Gratuit 3 mois » annoncé dès la page (titre, description)", /gratuit 3 mois/i.test(html) && /Gratuit 3 mois/.test(html));
 
@@ -175,7 +175,7 @@ check("« Gratuit 3 mois » annoncé dès la page (titre, description)", /gratui
   w.open = u => { ouv.push(u); return null; }; w.goatcounter = { count: o => comptes.push(o) };
   check("en-tête : un seul bouton Partager", d.querySelectorAll("header .partager").length === 1);
   clic(d, "#partager");
-  check("Partager sans menu du téléphone : WhatsApp avec l'adresse du site, clic compté", ouv.length === 1 && decodeURIComponent(ouv[0]).includes("https://ah6259.github.io/mes-comptes-tunisie/") && comptes.length === 1 && comptes[0].event === true);
+  check("Partager sans menu du téléphone : WhatsApp avec l'adresse du site, clic compté", ouv.length === 1 && decodeURIComponent(ouv[0]).includes("https://comptes.clicvia.com/") && comptes.length === 1 && comptes[0].event === true);
 }
 
 console.log(`\n${erreurs ? erreurs + " PROBLÈME(S)" : "TOUT PASSE"} (${total} vérifications)`);

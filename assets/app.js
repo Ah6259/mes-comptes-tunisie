@@ -452,7 +452,7 @@
   // bouton Partager de l'en-tête (règle commune à tous les sites, ajouté le 09/10/2026) : menu de partage du téléphone,
   // sinon WhatsApp ; clic compté anonymement ; on partage seulement l'adresse du site (jamais les données de l'utilisateur)
   function partager() {
-    const url = "https://ah6259.github.io/mes-comptes-tunisie/", titre = "Mes comptes — revenus, dépenses, impôt et rappels",
+    const url = "https://comptes.clicvia.com/", titre = "Mes comptes — revenus, dépenses, impôt et rappels",
       texte = titre + " : gratuit 3 mois, les données restent dans votre téléphone.";
     try { if (window.goatcounter && window.goatcounter.count) window.goatcounter.count({ path: "partage/", title: "Partage", event: true }); } catch (x) {}
     const wa = () => window.open("https://wa.me/?text=" + encodeURIComponent(texte + " " + url), "_blank", "noopener");
