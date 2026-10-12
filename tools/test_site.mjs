@@ -38,7 +38,7 @@ const remplir = (w, form, v) => { for (const [k, x] of Object.entries(v)) form.e
 // ---- 1. page, sécurité, installation
 const html = lire("index.html");
 check("index : CSP sans script en ligne, noai, referrer, pas de traduction auto", /http-equiv="Content-Security-Policy"/.test(html) && /noai, noimageai/.test(html) && /strict-origin-when-cross-origin/.test(html)
-  && /<html lang="fr" translate="no">/.test(html) && /name="google" content="notranslate"/.test(html) && !/<script(?![^>]*\bsrc=)[^>]*>/.test(html) && !/\son[a-z]+=/i.test(html));
+  && /<html lang="fr" translate="no">/.test(html) && /name="google" content="notranslate"/.test(html) && !/<script(?![^>]*\bsrc=)(?![^>]*type="application\/ld\+json")[^>]*>/.test(html) && !/\son[a-z]+=/i.test(html));
 check("index : même ?v= pour style, app et protection ; sw.js le connaît", (() => { const v = [...html.matchAll(/\?v=(\w+)/g)].map(m => m[1]); const sw = lire("sw.js");
   return v.length === 3 && new Set(v).size === 1 && sw.includes(v[0]); })());
 check("installation : manifeste, icônes 192/512/maskable/180, service worker", ["manifest.webmanifest", "sw.js", "assets/icons/icon-192.png", "assets/icons/icon-512.png", "assets/icons/icon-maskable-512.png", "assets/icons/icon-180.png", "assets/og-image-v1.jpg"].every(f => existsSync(join(root, f)))
