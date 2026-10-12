@@ -38,3 +38,5 @@ Version arabe ; abonnement (Pass comme Documents / Code de la route, bouton de p
 fiscales et l'abattement sur les loyers sur les textes officiels ; Search Console + sitemap du site racine.
 
 - **Adresse depuis le 11/10/2026 : https://comptes.clicvia.com/** (CNAME comptes → ah6259.github.io, nuage gris, fichier `CNAME`). L'ancienne adresse redirige seule. GoatCounter garde le préfixe `/mes-comptes-tunisie` (`window.goatcounter.path` au début de assets/protection.js, chargé SANS defer avant count.js).
+
+- **Visibilité Google (12/10/2026, règle commune § 8)** : liens vers nos autres sites en `https://<site>.clicvia.com/` (jamais `ah6259.github.io`), lien « Tous nos services » → https://clicvia.com/ dans le pied de page, `robots.txt` avec ligne Sitemap, `sitemap.xml` daté, JSON-LD sur l'accueil, clé IndexNow `377f054ba9c5ed40d6796adc8d87d1e8.txt` à la racine (ne pas supprimer : robot `indexnow` du portail). Contrôle : `node "outils visibilite/controle.mjs"` (dépôt projets-ahmed). Sitemap envoyé dans Search Console par Ahmed le 12/10/2026.
