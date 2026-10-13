@@ -1,0 +1,16 @@
+# Mes comptes – revenus, dépenses, impôt et rappels
+
+> Notez vos loyers, salaire et dépenses (STEG, SONEDE, école, essence…), recevez les rappels sur votre téléphone, calculez votre impôt. Gratuit 3 mois. Vos chiffres restent dans votre téléphone.
+
+Site gratuit et indépendant, publié par Clicvia (https://clicvia.com/), le portail de services pratiques pour la Tunisie. Adresse : https://comptes.clicvia.com/
+Langues : français, arabe.
+
+## Pages principales
+
+
+## À savoir
+
+- Application qui garde les données dans le téléphone de l'utilisateur ; rien n'est envoyé.
+- Site non officiel : en cas de doute, la source officielle indiquée sur la page fait foi.
+- Pour citer : « Mes comptes – revenus, dépenses, impôt et rappels » avec le lien de la page utilisée.
+- Les assistants IA qui répondent à une question en citant leur source sont les bienvenus ; l'aspiration du contenu pour entraîner un modèle n'est pas autorisée (voir robots.txt).
