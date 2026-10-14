@@ -178,5 +178,22 @@ check("« Gratuit 3 mois » annoncé dès la page (titre, description)", /gratui
   check("Partager sans menu du téléphone : WhatsApp avec l'adresse du site, clic compté", ouv.length === 1 && decodeURIComponent(ouv[0]).includes("https://comptes.clicvia.com/") && comptes.length === 1 && comptes[0].event === true);
 }
 
+// ---- « Votre avis » : e-mail obligatoire, confirmation dans la carte, lien du pied de page (demande d'Ahmed, 15/10/2026)
+{
+  const { w, d, js } = await page();
+  const envois = []; w.fetch = (u, o) => { envois.push([u, o]); return Promise.resolve({ ok: true }); };
+  check("pied de page : lien « Votre avis »", !!d.querySelector('footer a[href="#avis"]'));
+  w.location.hash = "#avis"; w.dispatchEvent(new w.HashChangeEvent("hashchange")); await new Promise(r => setTimeout(r, 100));
+  const f = d.getElementById("avis-form");
+  check("« Votre avis » : le lien ouvre l'onglet Plus sur le formulaire ; e-mail obligatoire", !!f && !d.getElementById("vue-plus").hidden && f.elements.email.required);
+  remplir(w, f, { message: "Très utile", email: "" }); await new Promise(r => setTimeout(r, 30));
+  check("« Votre avis » : sans e-mail -> refusé, rien envoyé", envois.length === 0 && /e-mail/.test(d.getElementById("avisStatut").textContent));
+  remplir(w, f, { message: "Très utile", email: "client@example.com" }); await new Promise(r => setTimeout(r, 50));
+  const m = d.getElementById("avis-merci");
+  check("« Votre avis » : envoyé avec l'e-mail ; « Merci ! Votre avis a bien été envoyé » dans la carte avec l'adresse, formulaire caché",
+    envois.length === 1 && JSON.parse(envois[0][1].body).email === "client@example.com" && !m.hidden && /Merci ! Votre avis a bien été envoyé/.test(m.textContent)
+    && /client@example\.com/.test(m.textContent) && f.hidden && !js.length);
+}
+
 console.log(`\n${erreurs ? erreurs + " PROBLÈME(S)" : "TOUT PASSE"} (${total} vérifications)`);
 process.exit(erreurs ? 1 : 0);

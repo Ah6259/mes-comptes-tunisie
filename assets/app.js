@@ -423,10 +423,12 @@
       <div class="bloc"><h2>Gratuit pendant 3 mois</h2>
       <p style="margin:0">Mes comptes est <b>gratuit pendant 3 mois</b> à partir de votre première visite. Ensuite, un abonnement payant sera proposé : le prix sera affiché avant tout paiement, rien n'est prélevé automatiquement, et vos chiffres restent à vous (sauvegarde et export toujours possibles).</p></div>
 
-      <div class="bloc"><h2>Votre avis</h2>
-      <form class="form" data-f="avis" style="grid-template-columns:1fr">
+      <div class="bloc" id="avis"><h2>Votre avis</h2>
+      <form class="form" data-f="avis" id="avis-form" style="grid-template-columns:1fr">
         <label>Une idée, un problème, une question ?<input name="message" required maxlength="1000" placeholder="Écrivez ici"></label>
-        <button class="btn" type="submit">Envoyer</button><p class="petit doux" role="status" id="avisStatut" style="margin:0">Envoyé de façon anonyme (n'écrivez pas vos montants).</p></form></div>
+        <label>Votre e-mail (obligatoire, pour vous répondre)<input name="email" type="email" required maxlength="200" autocomplete="email" placeholder="exemple@mail.com"></label>
+        <button class="btn" type="submit">Envoyer</button><p class="petit doux" role="status" id="avisStatut" style="margin:0">Votre e-mail sert seulement à vous répondre (n'écrivez pas vos montants).</p></form>
+      <div class="avis-merci" id="avis-merci" role="status" aria-live="polite" tabindex="-1" hidden></div></div>
 
       <div class="bloc"><h2>Exemple et remise à zéro</h2>
       <div class="boutons" style="justify-content:flex-start"><button type="button" class="mini" data-a="exemple">Charger l'exemple</button>
@@ -551,13 +553,30 @@
     else if (k === "facture") { D.facture = { montant: lireNb(v("montant")), methode: v("methode"), total: lireNb(v("total")) }; sauver(); vuePlus(); }
     else if (k === "avis" && !auto) envoyerAvis(f);
   }
+  // « Votre avis » (15/10/2026, demande d'Ahmed) : e-mail OBLIGATOIRE ; après l'envoi, confirmation bien visible dans la carte
   async function envoyerAvis(f) {
-    const st = $("avisStatut"), msg = f.elements.message.value.trim(); if (!msg) return;
+    const st = $("avisStatut"), msg = f.elements.message.value.trim(), mail = (f.elements.email.value || "").trim();
+    if (!msg) { st.textContent = "Écrivez votre message avant d'envoyer."; return; }
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]{2,}$/.test(mail)) { st.textContent = "Écrivez votre adresse e-mail (obligatoire) pour que nous puissions vous répondre."; f.elements.email.focus(); return; }
     st.textContent = "Envoi…";
-    try { const r = await fetch("https://formspree.io/f/mwlpakqj", { method: "POST", headers: { Accept: "application/json", "Content-Type": "application/json" }, body: JSON.stringify({ site: "Mes comptes", page: "plus", message: msg }) });
-      if (!r.ok) throw 0; f.reset(); st.textContent = "Merci ! Votre avis est envoyé."; }
+    try { const r = await fetch("https://formspree.io/f/mwlpakqj", { method: "POST", headers: { Accept: "application/json", "Content-Type": "application/json" }, body: JSON.stringify({ site: "Mes comptes", page: "plus", message: msg, email: mail }) });
+      if (!r.ok) throw 0;
+      f.reset(); st.textContent = "";
+      const b = $("avis-merci"), esc = s => String(s).replace(/[&<>"]/g, c => ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;" })[c]);
+      b.innerHTML = '<p class="avis-merci-titre">✅ Merci ! Votre avis a bien été envoyé.</p><p>Nous l’avons bien reçu et nous vous répondrons à l’adresse : <b>' + esc(mail) +
+        '</b></p><button type="button" class="btn btn-clair">Envoyer un autre message</button>';
+      b.querySelector("button").onclick = () => { b.hidden = true; f.hidden = false; f.elements.message.focus(); };
+      f.hidden = true; b.hidden = false;
+      try { b.focus({ preventScroll: true }); b.scrollIntoView({ behavior: "smooth", block: "center" }); } catch (x) { /* ancien navigateur */ } }
     catch (err) { st.textContent = "L'envoi n'a pas marché (pas de connexion ?). Réessayez plus tard."; }
   }
+  // lien « Votre avis » du pied de page (#avis) : ouvre l'onglet « Plus » sur le formulaire
+  function allerAvis() {
+    if (location.hash !== "#avis") return;
+    montrer("plus");
+    setTimeout(() => { const b = $("avis"); if (b) try { b.scrollIntoView({ block: "start" }); } catch (x) { /* ancien navigateur */ } }, 60);
+  }
+  window.addEventListener("hashchange", allerAvis);
   function exporterExcel() {
     const q = s => `"${String(s == null ? "" : s).replace(/"/g, '""')}"`, n = x => String(Math.round(x * 1000) / 1000).replace(".", ",");
     const L = ["\ufeffType;Date ou mois;Nom;Catégorie;Mode;Montant (DT);État"];
@@ -602,7 +621,7 @@
   }
 
   // ---------------------------------------------------------------- démarrage
-  function demarrer() { charger(); if (!D.vu) { D.vu = true; sauver(); } tout(); }
+  function demarrer() { charger(); if (!D.vu) { D.vu = true; sauver(); } tout(); allerAvis(); }
   if (document.readyState === "loading") document.addEventListener("DOMContentLoaded", demarrer); else demarrer();
   window.MesComptes = { donnees: () => D, alarmes, calculImpot, fichierIcs, tousLesRappels, exemple, bareme, capacite, tout, lienGoogle };
 })();
