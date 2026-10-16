@@ -195,5 +195,9 @@ check("« Gratuit 3 mois » annoncé dès la page (titre, description)", /gratui
     && /client@example\.com/.test(m.textContent) && f.hidden && !js.length);
 }
 
+// 16/10/2026 — règle commune d'Ahmed : toute cloche d'alerte VIBRE (secousses, immobile si « réduire les animations »)
+check("cloche d'alerte qui vibre (.cloche, règle commune)", /\.cloche\{[^}]*animation:cloche-secoue/.test(lire("assets/style.css"))
+  && /prefers-reduced-motion:reduce\)\{\.cloche\{animation:none/.test(lire("assets/style.css")));
+
 console.log(`\n${erreurs ? erreurs + " PROBLÈME(S)" : "TOUT PASSE"} (${total} vérifications)`);
 process.exit(erreurs ? 1 : 0);

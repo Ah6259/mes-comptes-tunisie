@@ -190,3 +190,9 @@ tr.groupe .resume{font:500 .84rem var(--texte);color:var(--doux)}
 .avis-merci p{margin:6px 0}
 .avis-merci-titre{font-size:19px;font-weight:800;color:#1F7A47}
 .avis-merci:focus{outline:none}
+
+/* 16/10/2026 — RÈGLE COMMUNE d'Ahmed : toute cloche d'alerte VIBRE (modèle du bouton Telegram « Alertes prix » de Prix des
+   Eaux) : 5 secousses à l'ouverture, puis toutes les 12 s, 3 séries, ensuite immobile ; jamais si « réduire les animations » */
+.cloche{display:inline-block;transform-origin:50% 12%;animation:cloche-secoue 12s ease-in-out 1s 3}
+@keyframes cloche-secoue{0%,25%,100%{transform:rotate(0)}2.5%,7.5%,12.5%,17.5%,22.5%{transform:rotate(14deg)}5%,10%,15%,20%{transform:rotate(-14deg)}}
+@media (prefers-reduced-motion:reduce){.cloche{animation:none}}
