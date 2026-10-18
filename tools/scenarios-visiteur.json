@@ -1,0 +1,290 @@
+[
+ {
+  "page": "",
+  "nom": "impôt : salaire brut 6000 DT/an (célibataire)",
+  "etapes": [
+   {
+    "sel": "button[data-vue=\"impot\"]:not([data-a])",
+    "clic": true
+   },
+   {
+    "sel": "form[data-f=\"impot\"] [name=\"chef\"]",
+    "valeur": "0"
+   },
+   {
+    "sel": "form[data-f=\"impot\"] [name=\"salaireBrut\"]",
+    "valeur": "6000"
+   }
+  ],
+  "lire": "#calculImpot .total .num",
+  "groupe": "impot-salaire",
+  "ordre": 0,
+  "croissant": true
+ },
+ {
+  "page": "",
+  "nom": "impôt : salaire brut 15000 DT/an (célibataire)",
+  "etapes": [
+   {
+    "sel": "button[data-vue=\"impot\"]:not([data-a])",
+    "clic": true
+   },
+   {
+    "sel": "form[data-f=\"impot\"] [name=\"chef\"]",
+    "valeur": "0"
+   },
+   {
+    "sel": "form[data-f=\"impot\"] [name=\"salaireBrut\"]",
+    "valeur": "15000"
+   }
+  ],
+  "lire": "#calculImpot .total .num",
+  "groupe": "impot-salaire",
+  "ordre": 1,
+  "croissant": true
+ },
+ {
+  "page": "",
+  "nom": "impôt : salaire brut 30000 DT/an (célibataire)",
+  "etapes": [
+   {
+    "sel": "button[data-vue=\"impot\"]:not([data-a])",
+    "clic": true
+   },
+   {
+    "sel": "form[data-f=\"impot\"] [name=\"chef\"]",
+    "valeur": "0"
+   },
+   {
+    "sel": "form[data-f=\"impot\"] [name=\"salaireBrut\"]",
+    "valeur": "30000"
+   }
+  ],
+  "lire": "#calculImpot .total .num",
+  "groupe": "impot-salaire",
+  "ordre": 2,
+  "croissant": true
+ },
+ {
+  "page": "",
+  "nom": "impôt : salaire brut 60000 DT/an (célibataire)",
+  "etapes": [
+   {
+    "sel": "button[data-vue=\"impot\"]:not([data-a])",
+    "clic": true
+   },
+   {
+    "sel": "form[data-f=\"impot\"] [name=\"chef\"]",
+    "valeur": "0"
+   },
+   {
+    "sel": "form[data-f=\"impot\"] [name=\"salaireBrut\"]",
+    "valeur": "60000"
+   }
+  ],
+  "lire": "#calculImpot .total .num",
+  "groupe": "impot-salaire",
+  "ordre": 3,
+  "croissant": true
+ },
+ {
+  "page": "",
+  "nom": "impôt : salaire brut 120000 DT/an (célibataire)",
+  "etapes": [
+   {
+    "sel": "button[data-vue=\"impot\"]:not([data-a])",
+    "clic": true
+   },
+   {
+    "sel": "form[data-f=\"impot\"] [name=\"chef\"]",
+    "valeur": "0"
+   },
+   {
+    "sel": "form[data-f=\"impot\"] [name=\"salaireBrut\"]",
+    "valeur": "120000"
+   }
+  ],
+  "lire": "#calculImpot .total .num",
+  "groupe": "impot-salaire",
+  "ordre": 4,
+  "croissant": true
+ },
+ {
+  "page": "",
+  "nom": "impôt 30 000 DT : chef de famille + 4 enfants",
+  "etapes": [
+   {
+    "sel": "button[data-vue=\"impot\"]:not([data-a])",
+    "clic": true
+   },
+   {
+    "sel": "form[data-f=\"impot\"] [name=\"chef\"]",
+    "valeur": "1"
+   },
+   {
+    "sel": "form[data-f=\"impot\"] [name=\"enfants\"]",
+    "valeur": "4"
+   },
+   {
+    "sel": "form[data-f=\"impot\"] [name=\"salaireBrut\"]",
+    "valeur": "30000"
+   }
+  ],
+  "lire": "#calculImpot .total .num",
+  "groupe": "impot-famille",
+  "ordre": 1,
+  "croissant": true
+ },
+ {
+  "page": "",
+  "nom": "impôt 30 000 DT : chef de famille sans enfant",
+  "etapes": [
+   {
+    "sel": "button[data-vue=\"impot\"]:not([data-a])",
+    "clic": true
+   },
+   {
+    "sel": "form[data-f=\"impot\"] [name=\"chef\"]",
+    "valeur": "1"
+   },
+   {
+    "sel": "form[data-f=\"impot\"] [name=\"enfants\"]",
+    "valeur": "0"
+   },
+   {
+    "sel": "form[data-f=\"impot\"] [name=\"salaireBrut\"]",
+    "valeur": "30000"
+   }
+  ],
+  "lire": "#calculImpot .total .num",
+  "groupe": "impot-famille",
+  "ordre": 2,
+  "croissant": true
+ },
+ {
+  "page": "",
+  "nom": "impôt 30 000 DT : célibataire",
+  "etapes": [
+   {
+    "sel": "button[data-vue=\"impot\"]:not([data-a])",
+    "clic": true
+   },
+   {
+    "sel": "form[data-f=\"impot\"] [name=\"chef\"]",
+    "valeur": "0"
+   },
+   {
+    "sel": "form[data-f=\"impot\"] [name=\"enfants\"]",
+    "valeur": "0"
+   },
+   {
+    "sel": "form[data-f=\"impot\"] [name=\"salaireBrut\"]",
+    "valeur": "30000"
+   }
+  ],
+  "lire": "#calculImpot .total .num",
+  "groupe": "impot-famille",
+  "ordre": 3,
+  "croissant": true
+ },
+ {
+  "page": "",
+  "nom": "impôt 48 000 DT : 6 000 DT déjà retenus (reste à payer plus petit)",
+  "etapes": [
+   {
+    "sel": "button[data-vue=\"impot\"]:not([data-a])",
+    "clic": true
+   },
+   {
+    "sel": "form[data-f=\"impot\"] [name=\"salaireBrut\"]",
+    "valeur": "48000"
+   },
+   {
+    "sel": "form[data-f=\"impot\"] [name=\"retenu\"]",
+    "valeur": "6000"
+   }
+  ],
+  "lire": "#calculImpot .total .num",
+  "groupe": "impot-retenu",
+  "ordre": 1,
+  "croissant": true
+ },
+ {
+  "page": "",
+  "nom": "impôt 48 000 DT : rien de retenu",
+  "etapes": [
+   {
+    "sel": "button[data-vue=\"impot\"]:not([data-a])",
+    "clic": true
+   },
+   {
+    "sel": "form[data-f=\"impot\"] [name=\"salaireBrut\"]",
+    "valeur": "48000"
+   },
+   {
+    "sel": "form[data-f=\"impot\"] [name=\"retenu\"]",
+    "valeur": "0"
+   }
+  ],
+  "lire": "#calculImpot .total .num",
+  "groupe": "impot-retenu",
+  "ordre": 2,
+  "croissant": true
+ },
+ {
+  "page": "",
+  "nom": "accueil : « Voir avec un exemple » (chiffres du mois)",
+  "etapes": [
+   {
+    "sel": "[data-a=\"exemple\"]",
+    "clic": true
+   }
+  ],
+  "lire": "#vue-accueil"
+ },
+ {
+  "page": "",
+  "nom": "exemple puis onglet Impôt (loyers comptés)",
+  "etapes": [
+   {
+    "sel": "[data-a=\"exemple\"]",
+    "clic": true
+   },
+   {
+    "sel": "button[data-vue=\"impot\"]:not([data-a])",
+    "clic": true
+   }
+  ],
+  "lire": "#calculImpot .total .num"
+ },
+ {
+  "page": "",
+  "nom": "exemple puis onglet Projets",
+  "etapes": [
+   {
+    "sel": "[data-a=\"exemple\"]",
+    "clic": true
+   },
+   {
+    "sel": "button[data-vue=\"projets\"]:not([data-a])",
+    "clic": true
+   }
+  ],
+  "lire": "#vue-projets"
+ },
+ {
+  "page": "",
+  "nom": "exemple puis onglet Revenus",
+  "etapes": [
+   {
+    "sel": "[data-a=\"exemple\"]",
+    "clic": true
+   },
+   {
+    "sel": "button[data-vue=\"revenus\"]:not([data-a])",
+    "clic": true
+   }
+  ],
+  "lire": "#vue-revenus"
+ }
+]

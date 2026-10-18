@@ -32,6 +32,7 @@ méthode d'Ahmed « entre locataires seulement » par défaut ; sauvegarde ; avi
 - Tests : `node tools/test_site.mjs` (44 vérifications, jsdom ; accepte un dossier pour tester une copie sabotée).
   `tests.yml` les lance à chaque envoi. Sur le PC, jsdom est pris dans le dossier de Documents Tunisie.
 - `window.MC_MAINTENANT` (tests) fixe la date du jour.
+- **Visiteur simulé** (règle générale du 18/10/2026, outil commun copié tel quel) : `python3 tools/visiteur_simule.py` (aussi dans tests.yml) — page à 390 px dans Chromium et `tools/scenarios-visiteur.json` : onglet Impôt rempli comme un visiteur (salaire plus haut → impôt plus haut, chef de famille et enfants → impôt plus bas, déjà retenu → reste plus petit) + « Voir avec un exemple ». Jamais de « % » dans un scénario (l'outil plante). 18/10 : en-tête plus large que l'écran (395 px) corrigé.
 
 ## À faire ensuite
 Version arabe ; abonnement (Pass comme Documents / Code de la route, bouton de paiement commun) ; vérifier les dates
