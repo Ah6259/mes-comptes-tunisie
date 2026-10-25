@@ -14,6 +14,7 @@ window.goatcounter.path = function (p) { return /\.github\.io$/.test(location.ho
   } catch (e) {}
   document.addEventListener("contextmenu", e => { if (e.target.closest && e.target.closest("img, svg")) e.preventDefault(); });
   try {
-    if ("serviceWorker" in navigator && location.protocol === "https:") navigator.serviceWorker.register("sw.js", { scope: "./" }).catch(() => {});
+    /* seulement sur la page qui a le manifeste (l'application) : pas sur a-propos/ (sw.js est à la racine) */
+    if ("serviceWorker" in navigator && location.protocol === "https:" && document.querySelector('link[rel="manifest"]')) navigator.serviceWorker.register("sw.js", { scope: "./" }).catch(() => {});
   } catch (e) {}
 })();

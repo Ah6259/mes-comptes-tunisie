@@ -198,3 +198,14 @@ tr.groupe .resume{font:500 .84rem var(--texte);color:var(--doux)}
 .cloche{display:inline-block;transform-origin:50% 12%;animation:cloche-secoue 12s ease-in-out 1s 3}
 @keyframes cloche-secoue{0%,25%,100%{transform:rotate(0)}2.5%,7.5%,12.5%,17.5%,22.5%{transform:rotate(14deg)}5%,10%,15%,20%{transform:rotate(-14deg)}}
 @media (prefers-reduced-motion:reduce){.cloche{animation:none}}
+
+/* page « Comment fonctionne le site ? » (règle commune § 44, 25/10/2026) */
+.nom-site{display:block;font-family:var(--titre);font-size:1.45rem;font-weight:800;line-height:1.15;letter-spacing:-.01em}
+.btn-ouvrir{padding:8px 12px;font-size:.88rem;white-space:nowrap}
+.page-ap{max-width:760px;padding-block:16px 24px}
+.ap-tete{display:grid;gap:8px}.ap-tete p{margin:0}
+.page-ap .bloc{gap:8px}.page-ap .bloc p{margin:0}
+.ap-liste{margin:0;padding-inline-start:20px;display:grid;gap:8px}
+.ap-retour{text-align:center;margin:0}
+.pied-ap{max-width:760px;padding-bottom:32px}
+@media (max-width:420px){.nom-site{font-size:1.1rem;white-space:nowrap}.btn-ouvrir{padding:7px 10px;font-size:.8rem}}

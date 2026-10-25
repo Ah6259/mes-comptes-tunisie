@@ -199,5 +199,36 @@ check("« Gratuit 3 mois » annoncé dès la page (titre, description)", /gratui
 check("cloche d'alerte qui vibre (.cloche, règle commune)", /\.cloche\{[^}]*animation:cloche-secoue/.test(lire("assets/style.css"))
   && /prefers-reduced-motion:reduce\)\{\.cloche\{animation:none/.test(lire("assets/style.css")));
 
+// 25/10/2026 (RÈGLE d'Ahmed, règle commune § 44 : « la page Comment fonctionne le site doit être mise à jour chaque fois qu'on modifie
+// le site ») : chaque fonction visible (repère dans le code) doit être expliquée dans a-propos/ ; nouvelle fonction = une ligne ici + la page.
+{ const apF = "a-propos/index.html", ap = existsSync(join(root, apF)) ? lire(apF).replace(/&nbsp;/g, " ").replace(/ /g, " ").replace(/’/g, "'") : "";
+  const app = lire("assets/app.js"), idx = lire("index.html");
+  const FONCTIONS = [
+    ["Accueil : alarmes, À faire, chiffres du mois", /<h2>Alarmes<\/h2>/.test(app) && /<h2>Ce mois-ci<\/h2>/.test(app), /les alarmes du jour, la liste « À faire »/],
+    ["alarmes sur le téléphone (agenda .ics, Google Agenda)", /data-a="ics-tout"/.test(app) && /function lienGoogle/.test(app), /Mettre toutes mes alarmes sur mon téléphone[\s\S]*Google Agenda/],
+    ["revenus (loyers, salaires, autres ; cash / virement ; état par mois)", /data-vue="revenus"/.test(idx) && /ETATS_LOYER/.test(app), /<b>Revenus<\/b>[\s\S]*cash ou par virement/],
+    ["« À appeler » à 18:30 + bouton Appeler", /HEURE_APPEL = "18:30"/.test(app) && /href="tel:/.test(app), /À appeler[\s\S]*18:30[\s\S]*Appeler/],
+    ["dépenses (une fois ou qui reviennent)", /data-vue="depenses"/.test(idx) && /Dépenses qui reviennent/.test(app), /<b>Dépenses<\/b>[\s\S]*qui revient/],
+    ["impôt : dates limites + calcul", /data-vue="impot"/.test(idx) && /function calculImpot/.test(app), /<b>Impôt<\/b>[\s\S]*dates limites[\s\S]*calcul indicatif/],
+    ["projets (faisable ? conseils)", /data-vue="projets"/.test(idx) && /Conseils pour y arriver/.test(app), /<b>Projets<\/b>[\s\S]*faisable[\s\S]*conseils/],
+    ["facture STEG ou SONEDE partagée", /Partager une facture STEG ou SONEDE/.test(app), /Facture STEG ou SONEDE partagée/],
+    ["sauvegarde, restauration, export Excel", /data-a="sauvegarde"/.test(app) && /data-a="restaurer"/.test(app) && /function exporterExcel/.test(app), /<b>Sauvegarde<\/b>[\s\S]*restaurer[\s\S]*Excel/],
+    ["exemple et tout effacer", /function exemple/.test(app) && /data-a="effacer"/.test(app), /Voir avec un exemple[\s\S]*tout effacer/],
+    ["Votre avis (formulaire)", /data-f="avis"/.test(app), /<b>Votre avis<\/b>/],
+    ["bouton Partager", /id="partager"/.test(idx), /<b>Partager<\/b>[\s\S]*jamais partagés/],
+    ["installation sur le téléphone / hors connexion", existsSync(join(root, "manifest.webmanifest")) && existsSync(join(root, "sw.js")), /Installer sur le téléphone[\s\S]*sans connexion/],
+    ["gratuit 3 mois, puis abonnement", /ESSAI_JOURS = 90/.test(app), /gratuit pendant 3 mois[\s\S]*rien n'est prélevé automatiquement/],
+    ["vos chiffres restent dans le téléphone", /localStorage/.test(app), /Vos chiffres restent dans votre téléphone/],
+    ["statistiques anonymes sans cookies", /goatcounter/.test(idx), /anonymes, sans cookies/]];
+  const manque = FONCTIONS.filter(([, sur, re]) => sur && !re.test(ap)).map(([n]) => n);
+  check(`page « Comment fonctionne le site ? » à jour : chaque fonction du site y est expliquée (${FONCTIONS.length} fonctions)` + (manque.length ? " — manque : " + manque.join(", ") : ""),
+    manque.length === 0);
+  const brut = existsSync(join(root, apF)) ? lire(apF) : "";
+  check("page « Comment fonctionne le site ? » : titre, lien dans le pied de page de l'accueil et de la page, dans le plan du site, CSP sans script en ligne, même ?v=",
+    /<h1>Comment fonctionne le site&nbsp;\?<\/h1>/.test(brut) && /<footer[\s\S]*href="a-propos\/">Comment fonctionne le site \?<\/a>[\s\S]*<\/footer>/.test(idx)
+    && /<footer[\s\S]*href="\.\.\/a-propos\/">Comment fonctionne le site \?<\/a>/.test(brut) && lire("sitemap.xml").includes("<loc>https://comptes.clicvia.com/a-propos/</loc>")
+    && /http-equiv="Content-Security-Policy"/.test(brut) && !/<script(?![^>]*\bsrc=)(?![^>]*type="application\/ld\+json")[^>]*>/.test(brut) && !/\son[a-z]+=/i.test(brut)
+    && [...brut.matchAll(/\?v=(\w+)/g)].every(m => idx.includes("?v=" + m[1])) && /data-goatcounter/.test(brut)); }
+
 console.log(`\n${erreurs ? erreurs + " PROBLÈME(S)" : "TOUT PASSE"} (${total} vérifications)`);
 process.exit(erreurs ? 1 : 0);

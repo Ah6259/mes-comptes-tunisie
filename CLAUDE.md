@@ -25,11 +25,19 @@ limites filtrables Ce mois / 3 / 6 / 12 mois / Tout ; calcul barème 2026 + loye
 (obligatoires / futurs, faisable ?, conseils, ajouter / modifier / supprimer) · Plus (partage STEG/SONEDE par index,
 méthode d'Ahmed « entre locataires seulement » par défaut ; sauvegarde ; avis ; exemple ; tout effacer).
 
+## Page « Comment fonctionne le site ? » (25/10/2026)
+- `a-propos/index.html` (page fixe écrite à la main, même en-tête / pied / CSP / GoatCounter que l'accueil, dans le plan du site),
+  lien « Comment fonctionne le site ? » dans le pied de page de l'accueil et de la page. `protection.js` n'y enregistre pas le service
+  worker (seulement sur une page qui a le manifeste).
+- **RÈGLE D'AHMED (25/10/2026, règle commune § 44) : la page Comment fonctionne le site ? est mise à jour à CHAQUE modification visible,
+  dans le même envoi ; test FONCTIONS dans `tools/test_site.mjs`** (nouvelle fonction = une ligne dans FONCTIONS + son explication
+  dans la page, sinon test rouge = publication bloquée). Elle utilise le même `?v=` que index.html.
+
 ## Technique
 - `index.html` (CSP, noai, notranslate, manifeste, GoatCounter) · `assets/app.js` (tout) · `assets/style.css` ·
   `assets/protection.js` (anti-cadre + service worker) · `sw.js` (réseau d'abord pour la page ; caches `mes-comptes-*`).
 - Changer le `?v=` (index.html + sw.js, même valeur) à chaque modification ; le test le vérifie.
-- Tests : `node tools/test_site.mjs` (44 vérifications, jsdom ; accepte un dossier pour tester une copie sabotée).
+- Tests : `node tools/test_site.mjs` (53 vérifications, jsdom ; accepte un dossier pour tester une copie sabotée).
   `tests.yml` les lance à chaque envoi. Sur le PC, jsdom est pris dans le dossier de Documents Tunisie.
 - `window.MC_MAINTENANT` (tests) fixe la date du jour.
 - **Visiteur simulé** (règle générale du 18/10/2026, outil commun copié tel quel) : `python3 tools/visiteur_simule.py` (aussi dans tests.yml) — page à 390 px dans Chromium et `tools/scenarios-visiteur.json` : onglet Impôt rempli comme un visiteur (salaire plus haut → impôt plus haut, chef de famille et enfants → impôt plus bas, déjà retenu → reste plus petit) + « Voir avec un exemple ». Jamais de « % » dans un scénario (l'outil plante). 18/10 : en-tête plus large que l'écran (395 px) corrigé.
