@@ -53,3 +53,8 @@ fiscales et l'abattement sur les loyers sur les textes officiels ; Search Consol
 - **Google + Bing (12/10/2026)** : sitemap envoyé par Ahmed dans Google Search Console et dans Bing Webmaster Tools (site clicvia.com/), indexation de l'accueil demandée. Pour un nouveau site : mêmes gestes, voir `nouveau site - procedure.md` § 4 étape 5 (dépôt projets-ahmed).
 
 - **19/10/2026 — Visiteur simulé : contrôle des ESPACES (règle commune § 29)** : nouvelle copie commune installée, 0 anomalie, aucun défaut d'espace sur ce site.
+
+- **08/11/2026 — plan SEO d'Ahmed appliqué à ce site (phase 2 ; contrôle commun `outils visibilite/controle_seo.mjs` de projets-ahmed ;
+  plan : `consignes des taches/seo-comptes.md`)** : titre de l'accueil ramené à <= 70 caractères, descriptions des 2 pages <= 165
+  (avant : 75, 185 et 192, Google les coupait) ; « Gratuit 3 mois » toujours dans le titre et la description (test existant) ;
+  test « SEO : titre de 10 à 70 caractères et description de 40 à 170 » dans test_site.mjs (54 vérifications), visiteur simulé 0 anomalie.
