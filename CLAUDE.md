@@ -58,3 +58,7 @@ fiscales et l'abattement sur les loyers sur les textes officiels ; Search Consol
   plan : `consignes des taches/seo-comptes.md`)** : titre de l'accueil ramené à <= 70 caractères, descriptions des 2 pages <= 165
   (avant : 75, 185 et 192, Google les coupait) ; « Gratuit 3 mois » toujours dans le titre et la description (test existant) ;
   test « SEO : titre de 10 à 70 caractères et description de 40 à 170 » dans test_site.mjs (54 vérifications), visiteur simulé 0 anomalie.
+
+## Page 404 + Confidentialité / Conditions (17/11/2026, règle commune § 58)
+- `404.html` + `404.js` à la racine = page 404 COMMUNE (`outils communs/page-404/installer.py`, projets-ahmed) : ne pas les modifier ici, réinstaller.
+- Liens « Confidentialité » et « Conditions d'utilisation » (pages communes clicvia.com) dans le pied de index.html et a-propos/ ; test qui bloque dans `tools/test_site.mjs`.

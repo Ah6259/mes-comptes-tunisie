@@ -219,7 +219,8 @@ check("cloche d'alerte qui vibre (.cloche, règle commune)", /\.cloche\{[^}]*ani
     ["installation sur le téléphone / hors connexion", existsSync(join(root, "manifest.webmanifest")) && existsSync(join(root, "sw.js")), /Installer sur le téléphone[\s\S]*sans connexion/],
     ["gratuit 3 mois, puis abonnement", /ESSAI_JOURS = 90/.test(app), /gratuit pendant 3 mois[\s\S]*rien n'est prélevé automatiquement/],
     ["vos chiffres restent dans le téléphone", /localStorage/.test(app), /Vos chiffres restent dans votre téléphone/],
-    ["statistiques anonymes sans cookies", /goatcounter/.test(idx), /anonymes, sans cookies/]];
+    ["statistiques anonymes sans cookies", /goatcounter/.test(idx), /anonymes, sans cookies/],
+    ["Confidentialité et Conditions d'utilisation (pages communes)", /clicvia\.com\/conditions\//.test(idx), /Confidentialité[\s\S]*Conditions d'utilisation[\s\S]*communes à tous nos sites/]];
   const manque = FONCTIONS.filter(([, sur, re]) => sur && !re.test(ap)).map(([n]) => n);
   check(`page « Comment fonctionne le site ? » à jour : chaque fonction du site y est expliquée (${FONCTIONS.length} fonctions)` + (manque.length ? " — manque : " + manque.join(", ") : ""),
     manque.length === 0);
@@ -240,6 +241,15 @@ check("cloche d'alerte qui vibre (.cloche, règle commune)", /\.cloche\{[^}]*ani
     if (titres.has(t)) mal.push(`${p} même titre que ${titres.get(t)}`); titres.set(t, p);
   }
   check(`SEO : titre de 10 à 70 caractères et description de 40 à 170 sur chaque page, titres uniques ${mal.join(" | ")}`, mal.length === 0);
+}
+
+// ---- Page 404 du site + liens Confidentialité / Conditions d'utilisation dans le pied de CHAQUE page (17/11/2026, règle commune § 58 ; § 55 : test qui bloque)
+check("page 404 du site : 404.html + 404.js (« Recherche de la page »)", existsSync(join(root, "404.html")) && existsSync(join(root, "404.js"))
+  && /src="\/404\.js"/.test(lire("404.html")) && /Recherche de la page/.test(lire("404.js")));
+for (const p of ["index.html", "a-propos/index.html"]) {
+  const pied = (lire(p).match(/<footer[\s\S]*?<\/footer>/) || [""])[0];
+  check(`pied de page (${p}) : liens « Confidentialité » et « Conditions d'utilisation » vers clicvia.com`,
+    /<a href="https:\/\/clicvia\.com\/confidentialite\/"[^>]*>Confidentialité<\/a>/.test(pied) && /<a href="https:\/\/clicvia\.com\/conditions\/"[^>]*>Conditions d.utilisation<\/a>/.test(pied));
 }
 
 console.log(`\n${erreurs ? erreurs + " PROBLÈME(S)" : "TOUT PASSE"} (${total} vérifications)`);
