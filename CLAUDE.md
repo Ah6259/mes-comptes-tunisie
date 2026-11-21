@@ -66,3 +66,6 @@ fiscales et l'abattement sur les loyers sur les textes officiels ; Search Consol
 ## 21/11/2026 — Mode sombre lisible (signalé par Ahmed : mots illisibles en sombre) — version 20261121a
 - En sombre, `--dinar` / `--ok` / `--retard` deviennent clairs : texte blanc dessus illisible (« Mettre toutes mes alarmes… », onglet « Cash », « + Ajouter… »), bouton « Annuler » du message (or sur fond clair, 1,6), carte de bienvenue claire.
   Bloc « Mode sombre lisible » à la fin de `assets/style.css` : texte foncé sur l'accent (sauf `.btn-clair`), bienvenue aux verts foncés (texte blanc), « Annuler » brun. Mode clair inchangé. Contrôle Playwright de tous les onglets avec l'exemple : 0 défaut.
+- **21/11/2026 (suite) — mode CLAIR plus lisible (contraste ≥ 4,5)** : bloc clair de assets/style.css : `--ok` #17803D → #157538, `--or` #B7791F → #92600F,
+  `--attention` #B45309 → #A14A08 (« 0 DT », chiffres verts, pastilles « date à vérifier », « J−6 », verdicts des projets) ; sombre inchangé.
+  Contrôle de tous les onglets, vide et avec l'exemple : clair (4,5) 12 → 0, sombre 0. Version 20261121b.

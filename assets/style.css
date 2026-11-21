@@ -1,8 +1,8 @@
 /* Mes comptes — carnet de comptes de poche : alarmes d'abord, onglets en bas sur téléphone, montants en chiffres de caisse. */
 :root{
   --fond:#EDF2F0; --carte:#FFFFFF; --encre:#13232A; --doux:#56686D; --ligne:#D3DEDA;
-  --dinar:#0E6B5C; --dinar-fonce:#0A5246; --dinar-clair:#DCEFE9; --or:#B7791F; --or-vif:#F2B33D; --or-clair:#FBF0DA;
-  --ok:#17803D; --ok-clair:#E1F4E7; --attention:#B45309; --attention-clair:#FDEFD9; --retard:#B42318; --retard-clair:#FCE5E2;
+  --dinar:#0E6B5C; --dinar-fonce:#0A5246; --dinar-clair:#DCEFE9; --or:#92600F; --or-vif:#F2B33D; --or-clair:#FBF0DA;
+  --ok:#157538; --ok-clair:#E1F4E7; --attention:#A14A08; --attention-clair:#FDEFD9; --retard:#B42318; --retard-clair:#FCE5E2;
   --info:#1D5FA8; --info-clair:#E3EDF9; --gris-clair:#EEF1F0; --ombre:0 1px 2px rgba(19,35,42,.06),0 6px 18px rgba(19,35,42,.06);
   --titre:"Bricolage Grotesque","Segoe UI",system-ui,sans-serif;
   --texte:"Source Sans 3","Segoe UI",system-ui,sans-serif;
