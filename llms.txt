@@ -7,6 +7,10 @@ Langues : français, arabe.
 
 ## Pages principales
 
+- [Mes comptes (français)](https://comptes.clicvia.com/)
+- [حساباتي (arabe)](https://comptes.clicvia.com/ar/)
+- [Comment fonctionne le site ?](https://comptes.clicvia.com/a-propos/) · [كيف يعمل الموقع؟](https://comptes.clicvia.com/ar/a-propos/)
+
 
 ## À savoir
 
