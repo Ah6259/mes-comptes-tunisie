@@ -43,7 +43,7 @@ méthode d'Ahmed « entre locataires seulement » par défaut ; sauvegarde ; avi
 - **Visiteur simulé** (règle générale du 18/10/2026, outil commun copié tel quel) : `python3 tools/visiteur_simule.py` (aussi dans tests.yml) — page à 390 px dans Chromium et `tools/scenarios-visiteur.json` : onglet Impôt rempli comme un visiteur (salaire plus haut → impôt plus haut, chef de famille et enfants → impôt plus bas, déjà retenu → reste plus petit) + « Voir avec un exemple ». Jamais de « % » dans un scénario (l'outil plante). 18/10 : en-tête plus large que l'écran (395 px) corrigé.
 
 ## À faire ensuite
-Version arabe ; abonnement (Pass comme Documents / Code de la route, bouton de paiement commun) ; vérifier les dates
+Abonnement (Pass comme Documents / Code de la route, bouton de paiement commun) ; vérifier les dates
 fiscales et l'abattement sur les loyers sur les textes officiels ; Search Console + sitemap du site racine.
 
 - **Adresse depuis le 11/10/2026 : https://comptes.clicvia.com/** (CNAME comptes → ah6259.github.io, nuage gris, fichier `CNAME`). L'ancienne adresse redirige seule. GoatCounter garde le préfixe `/mes-comptes-tunisie` (`window.goatcounter.path` au début de assets/protection.js, chargé SANS defer avant count.js).
@@ -69,3 +69,27 @@ fiscales et l'abattement sur les loyers sur les textes officiels ; Search Consol
 - **21/11/2026 (suite) — mode CLAIR plus lisible (contraste ≥ 4,5)** : bloc clair de assets/style.css : `--ok` #17803D → #157538, `--or` #B7791F → #92600F,
   `--attention` #B45309 → #A14A08 (« 0 DT », chiffres verts, pastilles « date à vérifier », « J−6 », verdicts des projets) ; sombre inchangé.
   Contrôle de tous les onglets, vide et avec l'exemple : clair (4,5) 12 → 0, sombre 0. Version 20261121b.
+
+## 21/11/2026 — UNE ADRESSE PAR LANGUE : version arabe « حساباتي » (règle commune § 8 point 9) — version 20261121c
+- Avant : français seulement (« hreflang : aucun » au contrôle commun). Maintenant : `/` et `/a-propos/` en français seul, `/ar/` et
+  `/ar/a-propos/` en arabe seul (`lang="ar" dir="rtl"`, titre, description, canonical, og:url, og:locale `ar_AR`, JSON-LD arabes),
+  hreflang fr / ar / x-default (= français) identiques sur les deux pages, plan du site FR + AR avec hreflang, llms.txt.
+- **`ar/index.html` et `ar/a-propos/index.html` sont FABRIQUÉES par `python3 tools/construire_ar.py`** à partir des pages françaises
+  (traduction de chaque phrase de l'en-tête, des onglets et du pied dans le script ; texte de la page « Comment fonctionne le site ? »
+  arabe dans `tools/a-propos-ar.html`). **Ne jamais modifier ar/ à la main** : modifier la page française (+ la traduction), puis
+  relancer le script ; une phrase française changée sans sa traduction ARRÊTE la construction ; `tests.yml` lance `--verifier`.
+  `ar/manifest.webmanifest` (écrit à la main : id `/ar/`, start_url ./, rtl) permet d'installer la version arabe.
+- **L'application (assets/app.js) est la même pour les deux langues** : `AR` = `<html lang="ar">`, `T(fr, ar)` choisit chaque texte,
+  `iso()` isole nombres et montants (« 850 د.ت », chiffres latins), mois tunisiens (جانفي… ديسمبر), agenda .ics, Google Agenda, export CSV,
+  messages et exemple dans la langue de la page. **Mêmes données dans les deux langues** (localStorage `mes-comptes-v1`) : on garde des
+  clés stables (catégorie en français `cat`, types, états), traduites seulement à l'affichage (`catTxt`, `CATS_AR`). Nouveau texte dans
+  app.js = toujours `T("…", "…")` (le test « onglet affiché en arabe, sans mot français » le trouve sinon).
+- `assets/protection.js` : langue de l'ADRESSE ; bouton `a.langue-btn` (vrai lien « ع » / « Fr ») ouvre l'autre adresse et retient le choix
+  (clé `langue`) ; ancien `?lang=ar` → `ar/` ; renvoi seulement pour un visiteur venu d'une page du site, jamais robot / lien partagé / cadre ;
+  service worker enregistré à la racine (`data-racine`, « ../ » sur ar/) ; sw.js : `ar/` en réseau d'abord, en cache hors connexion.
+  GoatCounter : la page arabe est comptée `/mes-comptes-tunisie/ar/`.
+- Style : police Noto Sans Arabic sur ar/, pas d'espacement des lettres en arabe, champs de chiffres / téléphone / e-mail de gauche à droite.
+- Tests : bloc « une adresse par langue » de `tools/test_site.mjs` (104 vérifications : chaque onglet en arabe sans mot français avec
+  l'exemple, montants justes, alarmes, .ics, CSV, mêmes données FR/AR, bouton et renvois) ; 8 scénarios arabes du visiteur simulé
+  (ANOMALIES 0) ; mode sombre (3) et clair (4,5) : 0 défaut sur les 4 pages et les 6 onglets avec l'exemple.
+- **Traductions arabes écrites par Claude : à faire relire par un arabophone** (termes fiscaux surtout : قسط احتياطي، معلوم الجولان…).

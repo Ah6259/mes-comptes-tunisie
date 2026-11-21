@@ -221,3 +221,18 @@ tr.groupe .resume{font:500 .84rem var(--texte);color:var(--doux)}
   :root:not([data-theme="light"]) .bienvenue .btn:not(.btn-clair){color:#fff}
   :root:not([data-theme="light"]) .toast button{color:#8A5A00}
 }
+
+/* UNE ADRESSE PAR LANGUE (21/11/2026) : bouton de langue (vrai lien vers l'autre adresse) et page arabe (/ar/, de droite à gauche).
+   Le mot entier (« العربية » / « Français ») sur un écran large, l'initiale (« ع » / « Fr ») sur téléphone. */
+.langue-btn{flex:none;display:inline-flex;align-items:center;justify-content:center;min-width:36px;height:36px;padding:0 10px;border:1px solid var(--ligne);border-radius:999px;background:var(--carte);color:var(--dinar);font-weight:700;font-size:.9rem;text-decoration:none;white-space:nowrap}
+.langue-btn:hover{border-color:var(--dinar)}
+.langue-btn[lang="ar"]{font-family:"Noto Sans Arabic","Segoe UI",system-ui,sans-serif}
+.langue-btn[lang="fr"]{font-family:"Source Sans 3","Segoe UI",system-ui,sans-serif}
+.langue-btn .lb-court{display:none}
+@media (max-width:560px){.langue-btn{padding:0 8px}.langue-btn .lb-long{display:none}.langue-btn .lb-court{display:inline}}
+html[lang="ar"]{--titre:"Noto Sans Arabic","Segoe UI",system-ui,sans-serif;--texte:"Noto Sans Arabic","Segoe UI",system-ui,sans-serif}
+html[lang="ar"] body *{letter-spacing:0!important}
+html[lang="ar"] .etiq{text-transform:none;font-size:.8rem}
+/* champs de chiffres, téléphone et e-mail : de gauche à droite ; les montants affichés sont isolés par app.js (iso()) */
+html[lang="ar"] input.num,html[lang="ar"] input[type="email"],html[lang="ar"] .tel{direction:ltr;unicode-bidi:isolate}
+html[lang="ar"] input.num{text-align:right}

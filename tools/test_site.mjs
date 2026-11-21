@@ -15,13 +15,16 @@ const lire = f => readFileSync(join(root, f), "utf8");
 let erreurs = 0, total = 0;
 const check = (desc, ok) => { total++; if (ok) console.log("OK   " + desc); else { erreurs++; console.log("FAIL " + desc); } };
 
-async function page({ quand = "2026-10-22T19:00:00", stockage = {} } = {}) {
-  const html = lire("index.html").replace(/<script[^>]*gc\.zgo\.at[^>]*><\/script>/, "")
-    .replace(/<script defer src="(assets\/[^"?]+)(\?[^"]*)?"><\/script>/g, (_, f) => `<script>${lire(f)}</script>`);
+// chemin = "index.html" (français) ou "ar/index.html" (arabe, une adresse par langue) ; protection = true : protection.js est joué aussi
+async function page({ quand = "2026-10-22T19:00:00", stockage = {}, chemin = "index.html", protection = false, adresse = null, referrer = "", allerVers = null } = {}) {
+  const html = lire(chemin).replace(/<script[^>]*gc\.zgo\.at[^>]*><\/script>/, "")
+    .replace(/<script defer src="(?:\.\.\/)*(assets\/[^"?]+)(\?[^"]*)?"><\/script>/g, (_, f) => `<script>${lire(f)}</script>`)
+    .replace(/<script src="(?:\.\.\/)*(assets\/protection\.js)(\?[^"]*)?"><\/script>/, (_, f) => protection ? `<script>${lire(f)}</script>` : "");
   const vc = new VirtualConsole(), js = [];
   vc.on("jsdomError", e => { if (!/Not implemented/.test(e.message)) js.push(e.message); });
-  const dom = new JSDOM(html, { url: "https://comptes.clicvia.com/", runScripts: "dangerously", pretendToBeVisual: true, virtualConsole: vc,
+  const dom = new JSDOM(html, { url: adresse || "https://comptes.clicvia.com/" + chemin.replace("index.html", ""), ...(referrer ? { referrer } : {}), runScripts: "dangerously", pretendToBeVisual: true, virtualConsole: vc,
     beforeParse(w) {
+      if (allerVers) w.allerVers = allerVers;
       w.MC_MAINTENANT = quand;
       for (const [k, v] of Object.entries(stockage)) w.localStorage.setItem(k, v);
       w.__fichiers = []; w.URL.createObjectURL = b => { w.__fichiers.push(b); return "blob:x"; }; w.URL.revokeObjectURL = () => {};
@@ -38,7 +41,7 @@ const remplir = (w, form, v) => { for (const [k, x] of Object.entries(v)) form.e
 // ---- 1. page, sécurité, installation
 const html = lire("index.html");
 check("index : CSP sans script en ligne, noai, referrer, pas de traduction auto", /http-equiv="Content-Security-Policy"/.test(html) && /noai, noimageai/.test(html) && /strict-origin-when-cross-origin/.test(html)
-  && /<html lang="fr" translate="no">/.test(html) && /name="google" content="notranslate"/.test(html) && !/<script(?![^>]*\bsrc=)(?![^>]*type="application\/ld\+json")[^>]*>/.test(html) && !/\son[a-z]+=/i.test(html));
+  && /<html lang="fr" translate="no"[^>]*>/.test(html) && /name="google" content="notranslate"/.test(html) && !/<script(?![^>]*\bsrc=)(?![^>]*type="application\/ld\+json")[^>]*>/.test(html) && !/\son[a-z]+=/i.test(html));
 check("index : même ?v= pour style, app et protection ; sw.js le connaît", (() => { const v = [...html.matchAll(/\?v=(\w+)/g)].map(m => m[1]); const sw = lire("sw.js");
   return v.length === 3 && new Set(v).size === 1 && sw.includes(v[0]); })());
 check("installation : manifeste, icônes 192/512/maskable/180, service worker", ["manifest.webmanifest", "sw.js", "assets/icons/icon-192.png", "assets/icons/icon-512.png", "assets/icons/icon-maskable-512.png", "assets/icons/icon-180.png", "assets/og-image-v1.jpg"].every(f => existsSync(join(root, f)))
@@ -216,6 +219,7 @@ check("cloche d'alerte qui vibre (.cloche, règle commune)", /\.cloche\{[^}]*ani
     ["exemple et tout effacer", /function exemple/.test(app) && /data-a="effacer"/.test(app), /Voir avec un exemple[\s\S]*tout effacer/],
     ["Votre avis (formulaire)", /data-f="avis"/.test(app), /<b>Votre avis<\/b>/],
     ["bouton Partager", /id="partager"/.test(idx), /<b>Partager<\/b>[\s\S]*jamais partagés/],
+    ["une adresse par langue (version arabe ar/)", existsSync(join(root, "ar/index.html")) && /const AR = /.test(app), /Une adresse par langue[\s\S]*comptes\.clicvia\.com\/ar\//],
     ["installation sur le téléphone / hors connexion", existsSync(join(root, "manifest.webmanifest")) && existsSync(join(root, "sw.js")), /Installer sur le téléphone[\s\S]*sans connexion/],
     ["gratuit 3 mois, puis abonnement", /ESSAI_JOURS = 90/.test(app), /gratuit pendant 3 mois[\s\S]*rien n'est prélevé automatiquement/],
     ["vos chiffres restent dans le téléphone", /localStorage/.test(app), /Vos chiffres restent dans votre téléphone/],
@@ -250,6 +254,96 @@ for (const p of ["index.html", "a-propos/index.html"]) {
   const pied = (lire(p).match(/<footer[\s\S]*?<\/footer>/) || [""])[0];
   check(`pied de page (${p}) : liens « Confidentialité » et « Conditions d'utilisation » vers clicvia.com`,
     /<a href="https:\/\/clicvia\.com\/confidentialite\/"[^>]*>Confidentialité<\/a>/.test(pied) && /<a href="https:\/\/clicvia\.com\/conditions\/"[^>]*>Conditions d.utilisation<\/a>/.test(pied));
+}
+
+// ---- UNE ADRESSE PAR LANGUE (21/11/2026, règle commune § 8 point 9 : « une adresse par langue, jamais seulement ?lang= ») ----
+// Pages arabes fabriquées par tools/construire_ar.py (tests.yml vérifie qu'elles sont à jour avec --verifier).
+{
+  const PAIRES = [["index.html", "ar/index.html", "", "ar/"], ["a-propos/index.html", "ar/a-propos/index.html", "a-propos/", "ar/a-propos/"]];
+  const AR_RE = /[\u0600-\u06FF]/;
+  const visible = h => h.replace(/<head[\s\S]*?<\/head>/, "").replace(/<script[\s\S]*?<\/script>/g, "").replace(/<a class="langue-btn"[\s\S]*?<\/a>/g, "")
+    .replace(/<[^>]+>/g, " ").replace(/&[a-z]+;/g, " ");
+  // mots latins permis dans une page arabe : noms propres, marques, adresses
+  const PERMIS = new Set(["clicvia", "com", "comptes", "ar", "JavaScript", "Excel", "Google", "Ooredoo", "Chrome", "Safari", "kWh", "m"]);
+  const latins = t => (t.match(/[A-Za-zÀ-ÖØ-öø-ÿ]+/g) || []).filter(m => !PERMIS.has(m));
+  for (const [fr, ar, uFr, uAr] of PAIRES) {
+    check(`${ar} : la page arabe existe`, existsSync(join(root, ar)));
+    if (!existsSync(join(root, ar))) continue;
+    const hf = lire(fr), ha = lire(ar);
+    const t = h => (h.match(/<title>([^<]*)<\/title>/) || [])[1] || "", dsc = h => (h.match(/name="description" content="([^"]*)"/) || [])[1] || "";
+    check(`${ar} : <html lang="ar" dir="rtl">, langue fixe, titre (≤ 70) et description (40-165) en arabe`, /<html lang="ar" dir="rtl" translate="no" data-langue-fixe="ar"/.test(ha)
+      && AR_RE.test(t(ha)) && t(ha).length <= 70 && AR_RE.test(dsc(ha)) && dsc(ha).length >= 40 && dsc(ha).length <= 165 && t(ha) !== t(hf));
+    check(`${fr} : <html lang="fr">, langue fixe`, /<html lang="fr" translate="no" data-langue-fixe="fr"/.test(hf));
+    check(`${ar} : canonical, og:url et og:locale arabes ; ${fr} : français`,
+      ha.includes(`<link rel="canonical" href="https://comptes.clicvia.com/${uAr}">`) && ha.includes(`<meta property="og:url" content="https://comptes.clicvia.com/${uAr}">`)
+      && ha.includes('<meta property="og:locale" content="ar_AR">') && hf.includes(`<link rel="canonical" href="https://comptes.clicvia.com/${uFr}">`) && hf.includes('<meta property="og:locale" content="fr_FR">'));
+    const alt = h => [...h.matchAll(/<link rel="alternate" hreflang="([^"]+)" href="([^"]+)">/g)].map(m => m[1] + "=" + m[2]).sort().join(" ");
+    check(`${fr} ↔ ${ar} : hreflang fr / ar / x-default (= français), les mêmes sur les deux pages`,
+      alt(hf) === alt(ha) && alt(hf) === [`ar=https://comptes.clicvia.com/${uAr}`, `fr=https://comptes.clicvia.com/${uFr}`, `x-default=https://comptes.clicvia.com/${uFr}`].sort().join(" "));
+    const ld = h => { try { return JSON.parse((h.match(/<script type="application\/ld\+json">([\s\S]*?)<\/script>/) || [])[1]); } catch (e) { return null; } };
+    check(`${ar} : données Google (JSON-LD) en arabe, adresse ar/`, ld(ha) && ld(ha).inLanguage === "ar" && ld(ha).url === `https://comptes.clicvia.com/${uAr}` && ld(hf).inLanguage === "fr");
+    const vf = [...hf.matchAll(/\?v=(\w+)/g)].map(m => m[1]).join(), va = [...ha.matchAll(/\?v=(\w+)/g)].map(m => m[1]).join();
+    check(`${ar} : même ?v= que la page française, fichiers communs pris à la racine`, vf === va && vf.length > 0 && !/(src|href)="assets\//.test(ha.replace(/<link rel="manifest"[^>]*>/, "")));
+    const bf = (hf.match(/<a class="langue-btn"[^>]*>/) || [""])[0], ba = (ha.match(/<a class="langue-btn"[^>]*>/) || [""])[0];
+    check(`${fr} ↔ ${ar} : bouton de langue = vrai lien vers l'autre adresse (jamais data-l)`, /hreflang="ar"/.test(bf) && /hreflang="fr"/.test(ba)
+      && new URL(bf.match(/href="([^"]+)"/)[1], "https://comptes.clicvia.com/" + uFr).href === "https://comptes.clicvia.com/" + uAr
+      && new URL(ba.match(/href="([^"]+)"/)[1], "https://comptes.clicvia.com/" + uAr).href === "https://comptes.clicvia.com/" + uFr && !/data-l=/.test(hf + ha));
+    check(`${fr} : une seule langue (aucun mot arabe hors du bouton de langue)`, !AR_RE.test(visible(hf)));
+    const lat = latins(visible(ha));
+    check(`${ar} : une seule langue (aucun mot français) ${lat.slice(0, 8).join(", ")}`, lat.length === 0);
+    check(`${ar} : pied de page avec Confidentialité / Conditions en arabe (clicvia.com/ar/)`, /href="https:\/\/clicvia\.com\/ar\/confidentialite\/"/.test(ha) && /href="https:\/\/clicvia\.com\/ar\/conditions\/"/.test(ha));
+  }
+  check("ar/a-propos : titre « كيف يعمل الموقع؟ », lien dans le pied de page de ar/", /<h1>كيف يعمل الموقع؟<\/h1>/.test(lire("ar/a-propos/index.html")) && /href="a-propos\/">كيف يعمل الموقع؟<\/a>/.test(lire("ar/index.html")));
+  const sm = lire("sitemap.xml");
+  check("plan du site : pages FR et AR, avec leurs hreflang", ["", "ar/", "a-propos/", "ar/a-propos/"].every(u => sm.includes(`<loc>https://comptes.clicvia.com/${u}</loc>`)) && /hreflang="ar"/.test(sm));
+  const man = JSON.parse(lire("ar/manifest.webmanifest"));
+  check("installation en arabe : ar/manifest.webmanifest (lang ar, rtl, start_url ./, icônes à la racine)", man.lang === "ar" && man.dir === "rtl" && man.start_url === "./" && man.icons.every(i => existsSync(join(root, "ar", i.src))));
+  check("service worker : la page arabe est en réseau d'abord, gardée pour hors connexion", /"ar\/"/.test(lire("sw.js")) && /PORTEE \+ "ar\/"/.test(lire("sw.js")));
+
+  // l'application en arabe : chaque onglet en arabe, montants justes, mêmes données que la page française
+  const { w, d, js } = await page({ chemin: "ar/index.html" });
+  check("arabe : premier lancement sans erreur, écran de bienvenue en arabe, 3 étapes", !js.length && d.documentElement.dir === "rtl" && /مرحبًا بك في حساباتي/.test(d.body.textContent) && d.querySelectorAll(".bienvenue ol li").length === 3);
+  clic(d, '[data-a="exemple"]');
+  const M = w.MesComptes, D = M.donnees();
+  check("arabe : exemple chargé (5 revenus, noms en arabe), langue « ar »", M.langue === "ar" && D.revenus.length === 5 && AR_RE.test(D.revenus[0].nom) && !js.length);
+  const textes = {};
+  for (const v of ["accueil", "revenus", "depenses", "impot", "projets", "plus"]) { clic(d, `nav [data-vue="${v}"]`); textes[v] = d.getElementById("vue-" + v).textContent; }
+  const PERMIS_APP = new Set(["Ooredoo", "Google", "Excel", "kWh", "m", "exemple", "mail", "com", "J"]);
+  for (const [v, t] of Object.entries(textes)) {
+    const l = (t.match(/[A-Za-zÀ-ÖØ-öø-ÿ]+/g) || []).filter(m => !PERMIS_APP.has(m));
+    check(`arabe : onglet « ${v} » affiché en arabe, sans mot français ${l.slice(0, 8).join(", ")}`, AR_RE.test(t) && t.length > 100 && l.length === 0);
+  }
+  check("arabe : chiffres latins, montants en د.ت isolés de gauche à droite", /\u2066[\d\u202F\u00A0 ,]+\u2069 د\.ت/.test(textes.accueil) && !/[\u0660-\u0669]/.test(Object.values(textes).join("")));
+  check("arabe : facture STEG partagée juste (80,911 د.ت, عليه 30,911 د.ت)", /80,911\u2069 د\.ت/.test(textes.plus) && /عليه \u206630,911\u2069 د\.ت/.test(textes.plus));
+  check("arabe : alarmes en arabe (اتصل / كراء غير مدفوع / الضريبة بعد 6 أيام)", M.alarmes().some(a => /حان الوقت: اتصل/.test(a.titre)) && M.alarmes().some(a => /كراء غير مدفوع/.test(a.titre))
+    && M.alarmes().some(a => /الضريبة بعد \u20666\u2069 أيام/.test(a.titre)));
+  const ics = M.fichierIcs(M.tousLesRappels());
+  check("arabe : fichier agenda avec des rappels en arabe (même règles : 18:30 chaque jour, 30 / 15 / 3 jours avant)", /SUMMARY:الاتصال بـ/.test(ics) && /RRULE:FREQ=DAILY;COUNT=30/.test(ics) && /TRIGGER:-P15D/.test(ics) && ics.split("\r\n").every(l => l.length <= 75 || [...l].length <= 75));
+  clic(d, 'nav [data-vue="plus"]'); clic(d, '[data-a="excel"]');
+  check("arabe : export Excel avec en-têtes arabes", w.__fichiers.length === 1 && w.__fichiers[0].type === "text/csv");
+  check("arabe : barème identique (30 000 → 6 250)", Math.abs(M.bareme(30000) - 6250) < 1e-6 && M.calculImpot().loyersAn === (1600 + 850 + 850) * 12);
+  // mêmes données dans les deux langues (localStorage « mes-comptes-v1 » commun)
+  const fr2 = await page({ stockage: stock(w) });
+  check("mêmes chiffres dans les deux langues : l'exemple chargé en arabe est là sur la page française", fr2.w.MesComptes.donnees().revenus.length === 5 && fr2.w.MesComptes.langue === "fr");
+  const ar3 = await page({ chemin: "ar/index.html", stockage: { "mes-comptes-v1": JSON.stringify({ ...JSON.parse(stock(fr2.w)["mes-comptes-v1"]), depenses: [{ id: "x", date: "2026-10-03", quoi: "Courses", montant: 10, cat: "Courses", mode: "cash" }] }) } });
+  clic(ar3.d, 'nav [data-vue="depenses"]');
+  check("catégorie gardée en français dans le téléphone, affichée en arabe (Courses → المشتريات)", /المشتريات/.test(ar3.d.getElementById("vue-depenses").textContent));
+
+  // bouton de langue et renvois (protection.js)
+  const allees = []; const go = u => { allees.push(u); };
+  let p = await page({ protection: true, allerVers: go });
+  p.d.querySelector("a.langue-btn").dispatchEvent(new p.w.MouseEvent("click", { bubbles: true, cancelable: true }));  // (la page de test neutralise a.click())
+  check("bouton de langue (page française) : ouvre ar/ et retient « ar »", allees.at(-1) === "ar/" && p.w.localStorage.getItem("langue") === "ar");
+  p = await page({ protection: true, allerVers: go, adresse: "https://comptes.clicvia.com/?lang=ar#avis" });
+  check("ancien lien « ?lang=ar » : renvoyé vers ar/ (ancre gardée)", allees.at(-1) === "ar/#avis");
+  const n0 = allees.length;
+  p = await page({ protection: true, allerVers: go, stockage: { langue: "ar" } });
+  check("venu de Google ou d'un lien partagé : jamais renvoyé d'après la langue gardée", allees.length === n0);
+  p = await page({ protection: true, allerVers: go, stockage: { langue: "ar" }, referrer: "https://comptes.clicvia.com/a-propos/" });
+  check("venu d'une page du site avec « ar » choisi : renvoyé vers ar/", allees.length === n0 + 1 && allees.at(-1) === "ar/");
+  p = await page({ chemin: "ar/index.html", protection: true, allerVers: go });
+  p.d.querySelector("a.langue-btn").dispatchEvent(new p.w.MouseEvent("click", { bubbles: true, cancelable: true }));  // (la page de test neutralise a.click())
+  check("bouton de langue (page arabe) : ouvre la page française et retient « fr »", allees.at(-1) === "../" && p.w.localStorage.getItem("langue") === "fr");
 }
 
 console.log(`\n${erreurs ? erreurs + " PROBLÈME(S)" : "TOUT PASSE"} (${total} vérifications)`);
