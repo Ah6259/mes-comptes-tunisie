@@ -209,3 +209,15 @@ tr.groupe .resume{font:500 .84rem var(--texte);color:var(--doux)}
 .ap-retour{text-align:center;margin:0}
 .pied-ap{max-width:760px;padding-bottom:32px}
 @media (max-width:420px){.nom-site{font-size:1.1rem;white-space:nowrap}.btn-ouvrir{padding:7px 10px;font-size:.8rem}}
+
+/* Mode sombre lisible (21/11/2026) : en sombre, --dinar / --ok / --retard deviennent clairs ; le texte blanc posé
+   dessus devenait illisible (contraste ~2) -> texte foncé ; carte de bienvenue gardée foncée (texte blanc). */
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]) .btn:not(.btn-clair),:root:not([data-theme="light"]) .mini.vert,:root:not([data-theme="light"]) .compteur,
+  :root:not([data-theme="light"]) .sous button[aria-selected="true"],:root:not([data-theme="light"]) details.ajout:not([open]) > summary{color:#08201B}
+  :root:not([data-theme="light"]) .sous button[aria-selected="true"] .n{background:#08201B;color:var(--dinar)}
+  :root:not([data-theme="light"]) .bienvenue{background:linear-gradient(135deg,#0E6B5C 0%,#0A5246 100%)}
+  :root:not([data-theme="light"]) .bienvenue .btn-clair{background:#fff;color:#0A5246}
+  :root:not([data-theme="light"]) .bienvenue .btn:not(.btn-clair){color:#fff}
+  :root:not([data-theme="light"]) .toast button{color:#8A5A00}
+}

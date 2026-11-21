@@ -62,3 +62,7 @@ fiscales et l'abattement sur les loyers sur les textes officiels ; Search Consol
 ## Page 404 + Confidentialité / Conditions (17/11/2026, règle commune § 58)
 - `404.html` + `404.js` à la racine = page 404 COMMUNE (`outils communs/page-404/installer.py`, projets-ahmed) : ne pas les modifier ici, réinstaller.
 - Liens « Confidentialité » et « Conditions d'utilisation » (pages communes clicvia.com) dans le pied de index.html et a-propos/ ; test qui bloque dans `tools/test_site.mjs`.
+
+## 21/11/2026 — Mode sombre lisible (signalé par Ahmed : mots illisibles en sombre) — version 20261121a
+- En sombre, `--dinar` / `--ok` / `--retard` deviennent clairs : texte blanc dessus illisible (« Mettre toutes mes alarmes… », onglet « Cash », « + Ajouter… »), bouton « Annuler » du message (or sur fond clair, 1,6), carte de bienvenue claire.
+  Bloc « Mode sombre lisible » à la fin de `assets/style.css` : texte foncé sur l'accent (sauf `.btn-clair`), bienvenue aux verts foncés (texte blanc), « Annuler » brun. Mode clair inchangé. Contrôle Playwright de tous les onglets avec l'exemple : 0 défaut.
