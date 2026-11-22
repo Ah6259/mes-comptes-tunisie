@@ -224,7 +224,8 @@ check("cloche d'alerte qui vibre (.cloche, règle commune)", /\.cloche\{[^}]*ani
     ["gratuit 3 mois, puis abonnement", /ESSAI_JOURS = 90/.test(app), /gratuit pendant 3 mois[\s\S]*rien n'est prélevé automatiquement/],
     ["vos chiffres restent dans le téléphone", /localStorage/.test(app), /Vos chiffres restent dans votre téléphone/],
     ["statistiques anonymes sans cookies", /goatcounter/.test(idx), /anonymes, sans cookies/],
-    ["Confidentialité et Conditions d'utilisation (pages communes)", /clicvia\.com\/conditions\//.test(idx), /Confidentialité[\s\S]*Conditions d'utilisation[\s\S]*communes à tous nos sites/]];
+    ["Confidentialité et Conditions d'utilisation (pages communes)", /clicvia\.com\/conditions\//.test(idx), /Confidentialité[\s\S]*Conditions d'utilisation[\s\S]*communes à tous nos sites/],
+    ["éditeur Clicvia (données pour Google, 22/11/2026)", /clicvia\.com\/#organisation/.test(idx), /Publié par <a href="https:\/\/clicvia\.com\/"/]];
   const manque = FONCTIONS.filter(([, sur, re]) => sur && !re.test(ap)).map(([n]) => n);
   check(`page « Comment fonctionne le site ? » à jour : chaque fonction du site y est expliquée (${FONCTIONS.length} fonctions)` + (manque.length ? " — manque : " + manque.join(", ") : ""),
     manque.length === 0);
@@ -264,7 +265,7 @@ for (const p of ["index.html", "a-propos/index.html"]) {
   const visible = h => h.replace(/<head[\s\S]*?<\/head>/, "").replace(/<script[\s\S]*?<\/script>/g, "").replace(/<a class="langue-btn"[\s\S]*?<\/a>/g, "")
     .replace(/<[^>]+>/g, " ").replace(/&[a-z]+;/g, " ");
   // mots latins permis dans une page arabe : noms propres, marques, adresses
-  const PERMIS = new Set(["clicvia", "com", "comptes", "ar", "JavaScript", "Excel", "Google", "Ooredoo", "Chrome", "Safari", "kWh", "m"]);
+  const PERMIS = new Set(["clicvia", "Clicvia", "com", "comptes", "ar", "JavaScript", "Excel", "Google", "Ooredoo", "Chrome", "Safari", "kWh", "m"]);
   const latins = t => (t.match(/[A-Za-zÀ-ÖØ-öø-ÿ]+/g) || []).filter(m => !PERMIS.has(m));
   for (const [fr, ar, uFr, uAr] of PAIRES) {
     check(`${ar} : la page arabe existe`, existsSync(join(root, ar)));

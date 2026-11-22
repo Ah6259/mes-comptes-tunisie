@@ -93,3 +93,11 @@ fiscales et l'abattement sur les loyers sur les textes officiels ; Search Consol
   l'exemple, montants justes, alarmes, .ics, CSV, mêmes données FR/AR, bouton et renvois) ; 8 scénarios arabes du visiteur simulé
   (ANOMALIES 0) ; mode sombre (3) et clair (4,5) : 0 défaut sur les 4 pages et les 6 onglets avec l'exemple.
 - **Traductions arabes écrites par Claude : à faire relire par un arabophone** (termes fiscaux surtout : قسط احتياطي، معلوم الجولان…).
+
+## 22/11/2026 — Google + IA (demande d'Ahmed : « que Google et les IA indexent nos sites »)
+- État Search Console (21/11) : accueil « Crawled - currently not indexed » (dernière visite de Google le 12/10), aucune requête.
+- JSON-LD de l'accueil (WebApplication) : éditeur `publisher` = `Organization` Clicvia (@id https://clicvia.com/#organisation, page Facebook),
+  repris tel quel sur ar/ par construire_ar.py (remplacement par le début du bloc).
+- « Comment fonctionne le site ? » (FR + tools/a-propos-ar.html) : « Publié par Clicvia… pour nous écrire : Votre avis, dans l'onglet Plus » +
+  ligne `FONCTIONS` ; « Clicvia » ajouté aux mots latins permis sur les pages arabes (test).
+- robots.txt et llms.txt (sans chiffre) déjà bons : inchangés.
