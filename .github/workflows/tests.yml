@@ -28,6 +28,8 @@ jobs:
       - name: Pages arabes a jour
         # une adresse par langue (21/11/2026) : ar/ est fabriquée par tools/construire_ar.py depuis les pages françaises
         run: python tools/construire_ar.py --verifier
+      - name: Test des dates honnetes du plan du site (lastmod) et des pages noindex
+        run: python tools/test_lastmod.py tools/lastmod.json
       - name: Visiteur simule
         # Règle générale du 18/10/2026 : le visiteur simulé signale les problèmes AVANT le visiteur réel (outil commun tools/visiteur_simule.py)
         run: python tools/visiteur_simule.py

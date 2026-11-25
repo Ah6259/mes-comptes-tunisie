@@ -156,8 +156,19 @@ def main():
         with open(p, "w", encoding="utf-8", newline="\n") as fh:
             fh.write(html)
         print("écrit", chemin)
+    # plan Google du 25/11/2026 (B.2) : sitemap.xml (écrit à la main) reçoit la date du dernier VRAI changement de chaque page
+    # (empreinte gardée dans tools/lastmod.json, outil commun tools/lastmod.py) ; à relancer après toute modification d'une page
+    sys.path.insert(0, os.path.join(RACINE, "tools"))
+    import lastmod
+    sm = os.path.join(RACINE, "sitemap.xml")
+    xml = open(sm, encoding="utf-8").read()
+    xml2 = lastmod.honnete(xml, RACINE, URL, "tools/lastmod.json", ecrire_memoire=not verifier)
+    if verifier and xml2 != xml:
+        mal.append("sitemap.xml (dates du dernier vrai changement)")
+    elif xml2 != xml:
+        open(sm, "w", encoding="utf-8", newline="\n").write(xml2)
     if mal:
-        sys.exit("construire_ar --verifier : pages arabes pas à jour (lancer python3 tools/construire_ar.py) : " + ", ".join(mal))
+        sys.exit("construire_ar --verifier : pages arabes ou plan du site pas à jour (lancer python3 tools/construire_ar.py) : " + ", ".join(mal))
     if verifier:
         print("pages arabes à jour")
 

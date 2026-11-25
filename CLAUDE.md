@@ -110,3 +110,9 @@ fiscales et l'abattement sur les loyers sur les textes officiels ; Search Consol
 - « Comment fonctionne le site ? » (FR + tools/a-propos-ar.html) : « Publié par Clicvia… pour nous écrire : Votre avis, dans l'onglet Plus » +
   ligne `FONCTIONS` ; « Clicvia » ajouté aux mots latins permis sur les pages arabes (test).
 - robots.txt et llms.txt (sans chiffre) déjà bons : inchangés.
+
+## 25/11/2026 — plan Google (B.2, « fais » d'Ahmed après la chute Google d'octobre)
+- **lastmod HONNÊTE** : `python3 tools/construire_ar.py` met aussi dans sitemap.xml (écrit à la main) la date du dernier VRAI changement
+  de chaque page (outil COMMUN `tools/lastmod.py`, empreinte du contenu sans menus, pied, scripts, ?v= ni dates, gardée dans
+  `tools/lastmod.json`) ; `--verifier` contrôle aussi les dates. Test : `python tools/test_lastmod.py tools/lastmod.json` (tests.yml).
+  À propos : 22/11 (dernière vraie modification) au lieu de 21/11. Aucune page maigre (4 adresses).
