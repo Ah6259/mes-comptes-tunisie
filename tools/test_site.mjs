@@ -347,5 +347,14 @@ for (const p of ["index.html", "a-propos/index.html"]) {
   check("bouton de langue (page arabe) : ouvre la page française et retient « fr »", allees.at(-1) === "../" && p.w.localStorage.getItem("langue") === "fr");
 }
 
+// VIS.3 point 4 (27/11/2026) : Google ne voyait que 11 mots sur l'accueil (tout est écrit par app.js) -> « explorée, non indexée ».
+// L'accueil (FR et AR) garde au moins 120 mots lisibles SANS JavaScript (hors en-tête, menu et pied), dans sa langue.
+for (const f of ["index.html", "ar/index.html"]) {
+  const s = readFileSync(join(root, f), "utf8").replace(/<script[\s\S]*?<\/script>|<style[\s\S]*?<\/style>|<noscript[\s\S]*?<\/noscript>/g, " ")
+    .replace(/<header[\s\S]*?<\/header>|<nav[\s\S]*?<\/nav>|<footer[\s\S]*?<\/footer>/g, " ").replace(/<[^>]+>/g, " ").replace(/\s+/g, " ").trim();
+  const mots = s.split(" ").filter(Boolean).length;
+  check(`${f} : ${mots} mots lisibles sans JavaScript (120 au moins, pour Google et les IA ; l’arabe dit la même chose en moins de mots)`, mots >= 120);
+}
+
 console.log(`\n${erreurs ? erreurs + " PROBLÈME(S)" : "TOUT PASSE"} (${total} vérifications)`);
 process.exit(erreurs ? 1 : 0);
